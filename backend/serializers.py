@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from backend.models import post
+from backend.models import post, review
 
 from allauth.account import app_settings as allauth_settings
 from allauth.utils import email_address_exists
@@ -8,12 +8,59 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = review
+        fields = [
+            'item',
+            'reviewer',
+            'rating',
+            'review'
+        ]
+        depth = 1
+
+
 class PostSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = post
-        fields = '__all__'
+        fields = [
+            'owner',
+            'posted_on',
+            'item',
+            'rating',
+            'description',
+            'item_count',
+            'category',
+            'contact_number',
+            'cost',
+            'contact_email',
+            'long',
+            'lat',
+            'productId'
+        ]
 
 
+class PostGetSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = post
+        fields = [
+            'owner',
+            'posted_on',
+            'item',
+            'rating',
+            'description',
+            'item_count',
+            'category',
+            'contact_number',
+            'cost',
+            'contact_email',
+            'long',
+            'lat',
+            'productId'
+        ]
+        depth = 2
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -23,7 +70,6 @@ class RegisterSerializer(serializers.Serializer):
     last_name = serializers.CharField(required=True, write_only=True)
     password1 = serializers.CharField(required=True, write_only=True)
     password2 = serializers.CharField(required=True, write_only=True)
-
 
     def validate_email(self, email):
         email = get_adapter().clean_email(email)

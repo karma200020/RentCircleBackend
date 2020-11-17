@@ -15,12 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from backend.views import SnippetList, FacebookLogin
+from backend.views import ProductList, FacebookLogin, ProductGetList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('rest_framework.urls')),
-    path('explore/', SnippetList.as_view()),
+    path('explore/', ProductGetList.as_view()),
+    path('post/', ProductList.as_view()),
+    # path('reviews/', ReviewList.as_view()),
+    # path('reviews/<int:id>/', ReviewList.as_view()),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     path('dj-rest-auth/facebook/', FacebookLogin.as_view(), name='fb_login')
