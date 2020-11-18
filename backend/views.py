@@ -8,11 +8,19 @@ from rest_framework import mixins, generics, filters
 
 from backend.models import review, post
 from backend.serializers import ReviewSerializer, PostSerializer, PostGetSerializer
+from django_filters import rest_framework as filters
 
 
 # GENERIC FILTERS
 
 
+class ProductFilter(filters.FilterSet):
+    min_cost = filters.NumberFilter(field_name="cost", lookup_expr='gte')
+    max_cost = filters.NumberFilter(field_name="cost", lookup_expr='lte')
+
+    class Meta:
+        model = post
+        fields = ['min_cost', 'max_cost', 'item', 'category', 'productId']
 
 
 class ProductList(generics.GenericAPIView,
@@ -58,7 +66,7 @@ class ProductGetList(generics.GenericAPIView,
     queryset = post.objects.all()
     serializer_class = PostGetSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['item', 'category', 'productId']
+    filterset_class = ProductFilter
 
     def get(self, request, id=None):
         if id:
@@ -70,8 +78,8 @@ class ProductGetList(generics.GenericAPIView,
 class UserListView(generics.ListAPIView):
     queryset = post.objects.all()
     serializer_class = PostSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['username', 'email']
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['username', 'email']
 
 
 class ReviewList(generics.GenericAPIView,
