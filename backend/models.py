@@ -15,7 +15,7 @@ class post(models.Model):
         ('c', 'c')
     )
     owner = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE, null=True)
-    posted_on = models.DateField(null=False)
+    posted_on = models.DateField(null=False, auto_now=True)
     item = models.CharField(max_length=40)
     rating = models.IntegerField(default=0)
     description = models.CharField(max_length=300)
@@ -39,6 +39,7 @@ class review(models.Model):
     item = models.ForeignKey(post, related_name='reviewed', on_delete=models.CASCADE)
     rating = models.IntegerField(default=0)
     review = models.CharField(max_length=200)
+    reviewId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     def __str__(self):
         return self.reviewer.first_name + ' -  ' + self.item.item

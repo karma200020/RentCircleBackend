@@ -20,6 +20,19 @@ class ReviewSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class ReviewGetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = review
+        fields = [
+            'item',
+            'reviewer',
+            'rating',
+            'review',
+            'reviewId'
+        ]
+        depth = 2
+
+
 class PostSerializer(serializers.ModelSerializer):
 
     class Meta:

@@ -83,17 +83,15 @@ class UserListView(generics.ListAPIView):
 
 
 class ReviewList(generics.GenericAPIView,
-                 mixins.ListModelMixin,
-                 mixins.CreateModelMixin,
-                 mixins.RetrieveModelMixin,
-                 mixins.UpdateModelMixin,
-                 mixins.DestroyModelMixin):
-    queryset = review.objects.all()
-    serializer_class = ReviewSerializer
-
-    serializer_class = ReviewSerializer
-    queryset = review.objects.all()
-    lookup_field = 'id'
+                  mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
+                  mixins.DestroyModelMixin):
+    queryset = post.objects.all()
+    serializer_class = PostSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['item', 'category', 'productId']
 
     def get(self, request, id=None):
         if id:
@@ -116,6 +114,60 @@ class ReviewList(generics.GenericAPIView,
 
     def delete(self, request, id=None):
         return self.destroy(request, id)
+
+
+class ProductGetList(generics.GenericAPIView,
+                     mixins.ListModelMixin,
+                     mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin):
+    queryset = post.objects.all()
+    serializer_class = PostGetSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ProductFilter
+
+    def get(self, request, id=None):
+        if id:
+            return self.retrieve(request, id)
+        else:
+            return self.list(request)
+
+
+# class ReviewList(generics.GenericAPIView,
+#                  mixins.ListModelMixin,
+#                  mixins.CreateModelMixin,
+#                  mixins.RetrieveModelMixin,
+#                  mixins.UpdateModelMixin,
+#                  mixins.DestroyModelMixin):
+#     queryset = review.objects.all()
+#     serializer_class = ReviewSerializer
+#
+#     serializer_class = ReviewSerializer
+#     queryset = review.objects.all()
+#     lookup_field = 'id'
+#
+#     def get(self, request, id=None):
+#         if id:
+#             return self.retrieve(request, id)
+#         else:
+#             return self.list(request)
+#
+#     def post(self, request):
+#         return self.create(request)
+#
+#     def perform_create(self, serializer):
+#         serializer.save()
+#
+#     def put(self, request, id=None):
+#         return self.update(request, id)
+#
+#     def perform_update(self, serializer):
+#         print(self.request.user)
+#         serializer.save()
+#
+#     def delete(self, request, id=None):
+#         return self.destroy(request, id)
 
 
 class FacebookLogin(SocialLoginView):
